@@ -1,0 +1,1 @@
+Khuzama, I want to learn AI from scratch
