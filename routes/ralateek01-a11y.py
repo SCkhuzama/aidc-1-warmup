@@ -4,6 +4,6 @@ def handle():
     return {
         "name": "Razan Ala",
         "team": "aidc-1",
-        "wants": "To build real AI projects",
+        "wants": "Wants to ship a working demo",
     }
 
