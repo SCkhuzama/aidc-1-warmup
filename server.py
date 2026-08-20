@@ -6,7 +6,12 @@ Add your own file. Do not edit this one.
 import importlib.util, json, pathlib
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+_ROUTES_CACHE = None
+
 def load_routes():
+    global _ROUTES_CACHE
+    if _ROUTES_CACHE is not None:
+        return _ROUTES_CACHE
     routes = {}
     for f in sorted(pathlib.Path(__file__).parent.glob("routes/*.py")):
         if f.name.startswith("_"):
@@ -16,6 +21,7 @@ def load_routes():
         spec.loader.exec_module(mod)
         if hasattr(mod, "PATH") and hasattr(mod, "handle"):
             routes[mod.PATH] = mod.handle
+    _ROUTES_CACHE = routes
     return routes
 
 class Handler(BaseHTTPRequestHandler):
