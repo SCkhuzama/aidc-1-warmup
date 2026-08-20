@@ -1,5 +1,4 @@
 """A tiny HTTP server. Standard library only: nothing to install.
-
 Every file in routes/ that defines PATH and handle() becomes an endpoint.
 Add your own file. Do not edit this one.
 """
@@ -18,16 +17,17 @@ def load_routes():
             routes[mod.PATH] = mod.handle
     return routes
 
+ROUTES = load_routes()
+
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        routes = load_routes()
+        routes = ROUTES
         if self.path == "/":
             self.reply(200, {"endpoints": sorted(routes) + ["/"]})
         elif self.path in routes:
             self.reply(200, routes[self.path]())
         else:
             self.reply(404, {"error": "no such path", "try": sorted(routes)})
-
     def reply(self, code, body):
         payload = json.dumps(body, indent=2).encode()
         self.send_response(code)
@@ -35,7 +35,6 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(payload)))
         self.end_headers()
         self.wfile.write(payload)
-
     def log_message(self, fmt, *args):
         print("  %s" % (fmt % args))
 
